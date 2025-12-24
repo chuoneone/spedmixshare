@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>特教教材資源共享平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      /* --- 此處保留您之前的湖水綠 CSS 樣式 --- */
+      :root { --primary-color: #4DB6AC; --primary-dark: #00897B; --bg-color: #f0f4f7; --card-bg: #ffffff; --text-color: #37474f; --text-light: #78909c; --tag-bg: #e0f2f1; --tag-text: #00796b; }
+      body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+      header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+      header h1 { margin: 0; font-size: 2em; font-weight: 700; }
+      .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; flex: 1; box-sizing: border-box; }
+      .control-panel { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: center; }
+      .filter-group { display: flex; align-items: center; gap: 8px; }
+      select { padding: 10px 15px; border-radius: 8px; border: 1px solid #cfd8dc; font-size: 14px; background-color: #fff; min-width: 140px; cursor: pointer; }
+      #content { display: grid; gap: 20px; grid-template-columns: 1fr; }
+      @media (min-width: 600px) { #content { grid-template-columns: repeat(2, 1fr); } }
+      @media (min-width: 1024px) { #content { grid-template-columns: repeat(4, 1fr); } }
+      .card { background: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 3px 6px rgba(0,0,0,0.05); border-left: 6px solid var(--primary-color); transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+      .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+      .card h3 { margin: 0 0 10px 0; font-size: 1.25em; font-weight: 700; color: #263238; }
+      .tag { display: inline-block; background: var(--tag-bg); color: var(--tag-text); font-size: 0.8em; padding: 3px 8px; border-radius: 6px; margin-right: 4px; margin-bottom: 6px; font-weight: 500; }
+      .tag-type { background-color: #fff3e0; color: #e65100; }
+      .meta { font-size: 0.85em; color: var(--text-light); margin-bottom: 12px; font-weight: 500; }
+      .btn { display: block; background-color: var(--primary-color); color: white; text-align: center; padding: 10px; text-decoration: none; border-radius: 8px; font-weight: 500; }
+      .btn:hover { background-color: var(--primary-dark); }
+      .btn.disabled { background-color: #cfd8dc; color: #90a4ae; cursor: not-allowed; }
+      footer { background-color: #263238; color: #b0bec5; padding: 40px 20px; margin-top: 50px; text-align: center; font-size: 0.9em; }
+      .disclaimer-box { max-width: 850px; margin: 0 auto 20px; border: 1px solid #37474f; padding: 20px; border-radius: 12px; background: rgba(255,255,255,0.05); line-height: 1.7; }
+      .copyright { color: #80cbc4; font-weight: bold; font-size: 1.1em; display: block; margin-top: 10px; }
+      #loading { text-align: center; padding: 50px; font-size: 1.2em; color: var(--text-light); }
+    </style>
+  </head>
+  <body>
+
+    <header>
+      <h1>📚 特教教材資源共享平台</h1>
+      <p>匯集各路特教老師的智慧，讓備課更輕鬆</p>
+    </header>
+
+    <div class="container">
+      <div class="control-panel">
+        <div class="filter-group"><label>🎓 年級</label><select id="gradeSelect" onchange="filterData()"><option value="All">全部</option></select></div>
+        <div class="filter-group"><label>📖 科目</label><select id="subjectSelect" onchange="filterData()"><option value="All">全部</option></select></div>
+        <div class="filter-group"><label>📂 類型</label><select id="typeSelect" onchange="filterData()"><option value="All">全部</option></select></div>
+        <div class="filter-group"><label>👤 學生特性</label><select id="charSelect" onchange="filterData()"><option value="All">全部</option></select></div>
+      </div>
+      <div id="loading">🚀 正在連線至 Google 雲端載入教材...</div>
+      <div id="content"></div>
+    </div>
+
+    <footer>
+      <div class="disclaimer-box">
+        <p><strong>⚠️ 免責聲明 (Disclaimer)</strong></p>
+        <p>本平台之教材內容均由各特教老師分享，本人僅負責彙整與架設。教材版權歸原作者所有，連結有效性請自行斟酌。</p>
+      </div>
+      <span class="copyright">Designed by 米克師</span>
+    </footer>
+
+    <script>
+      // ⚠️ 請在此處貼上您剛才複製的 Google Apps Script API 網址
+      const API_URL = "https://script.google.com/macros/s/AKfycbx_j6IJv8JZcycXQ8U8HTHCbsP7s6VixUG7TsUfgHd8Y-5pyHf4COdfzTsnvDHPoS1M2A/exec";
+
+      const COL_CREATOR = 1, COL_NAME = 2, COL_SUBJECT = 3, COL_GRADE = 4, COL_LINK = 5, COL_TYPE = 10, COL_CHAR = 13;
+      const GRADE_ORDER = ["學前", "小一", "小二", "小三", "小四", "小五", "小六", "國一", "國二", "國三", "高一", "高二", "高三", "不限定"];
+      let allData = [];
+
+      window.onload = async function() {
+        try {
+          const response = await fetch(API_URL);
+          const data = await response.json();
+          processData(data);
+        } catch (e) {
+          document.getElementById('loading').innerHTML = "❌ 載入失敗，請確認 API 網址是否正確並已發布為「任何人」。";
+          console.error(e);
+        }
+      };
+
+      function processData(data) {
+        document.getElementById('loading').style.display = 'none';
+        data.shift();
+        allData = data;
+        populateDropdown('gradeSelect', COL_GRADE);
+        populateDropdown('subjectSelect', COL_SUBJECT);
+        populateDropdown('typeSelect', COL_TYPE);
+        populateDropdown('charSelect', COL_CHAR);
+        renderCards(allData);
+      }
+
+      function populateDropdown(elementId, colIndex) {
+        const select = document.getElementById(elementId);
+        let valuesSet = new Set();
+        allData.forEach(row => {
+          let rawValue = String(row[colIndex] || "");
+          if (rawValue.trim() !== "") {
+            let parts = rawValue.split(/[,，、]/); 
+            parts.forEach(p => valuesSet.add(p.trim()));
+          }
+        });
+        let uniqueValues = Array.from(valuesSet);
+        if (elementId === 'gradeSelect') {
+          uniqueValues.sort((a, b) => (GRADE_ORDER.indexOf(a) === -1 ? 999 : GRADE_ORDER.indexOf(a)) - (GRADE_ORDER.indexOf(b) === -1 ? 999 : GRADE_ORDER.indexOf(b)));
+        } else {
+          uniqueValues.sort();
+        }
+        uniqueValues.forEach(val => {
+          let opt = document.createElement("option");
+          opt.value = val; opt.text = val; select.appendChild(opt);
+        });
+      }
+
+      function filterData() {
+        const grade = document.getElementById('gradeSelect').value;
+        const subject = document.getElementById('subjectSelect').value;
+        const type = document.getElementById('typeSelect').value;
+        const char = document.getElementById('charSelect').value;
+        const filtered = allData.filter(row => {
+          return ((grade === 'All') || String(row[COL_GRADE]).includes(grade)) && 
+                 ((subject === 'All') || String(row[COL_SUBJECT]).includes(subject)) &&
+                 ((type === 'All') || String(row[COL_TYPE]).includes(type)) &&
+                 ((char === 'All') || String(row[COL_CHAR]).includes(char));
+        });
+        renderCards(filtered);
+      }
+
+      function renderCards(data) {
+        const container = document.getElementById('content');
+        container.innerHTML = "";
+        if(data.length === 0) { container.innerHTML = "<div style='grid-column:1/-1; text-align:center; color:#888;'>🔍 找不到教材。</div>"; return; }
+        data.forEach(row => {
+          let link = String(row[COL_LINK] || "").trim();
+          let btnHtml = (link.startsWith("http")) ? `<a href="${link}" target="_blank" class="btn">前往教材</a>` : `<div class="btn disabled">無連結</div>`;
+          container.innerHTML += `
+            <div class="card">
+              <div>
+                <div class="tags">
+                  <span class="tag">${row[COL_SUBJECT] || "未分類"}</span>
+                  <span class="tag">${row[COL_GRADE] || "未分類"}</span>
+                  ${row[COL_TYPE] ? `<span class="tag tag-type">${row[COL_TYPE]}</span>` : ''}
+                </div>
+                <h3>${row[COL_NAME] || "未命名"}</h3>
+                <div class="meta">👤 分享者：${row[COL_CREATOR]}<br>🧩 適用：${row[COL_CHAR]}</div>
+              </div>
+              ${btnHtml}
+            </div>`;
+        });
+      }
+    </script>
+  </body>
+</html>
