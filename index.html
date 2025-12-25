@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>特教教材資源共享平台</title>
     
     <link rel="icon" href="sped2.png" type="image/png">
-
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
       :root {
@@ -25,7 +24,6 @@
       header h1 { margin: 0; font-size: 2em; font-weight: 700; letter-spacing: 1px; }
       header p { margin-top: 10px; opacity: 0.9; margin-bottom: 20px; }
 
-      /* 🟢 新增：分享按鈕樣式 */
       .btn-share {
         display: inline-block;
         background-color: #ffffff;
@@ -52,7 +50,7 @@
         box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px; 
         display: flex; flex-wrap: wrap; gap: 15px; 
         align-items: flex-end; 
-        justify-content: center; 
+        justify-content: center; /* 🛠️ 改為 center 讓面板在電腦版居中 */
       }
       
       .filter-group { display: flex; flex-direction: column; gap: 5px; }
@@ -60,7 +58,7 @@
       
       #searchInput {
         padding: 10px 15px; border-radius: 8px; border: 1px solid #cfd8dc;
-        font-size: 14px; width: 200px; transition: border 0.3s;
+        font-size: 14px; width: 200px; max-width: 100%; box-sizing: border-box; transition: border 0.3s;
       }
       #searchInput:focus { border-color: var(--primary-color); outline: none; }
 
@@ -72,10 +70,36 @@
       }
       .btn-reset:hover { background-color: #78909c; }
 
-      /* 內容區域 Grid 設定 */
+      /* 🟢 載入動畫樣式：已修正位置 */
+      .mini-loading-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px; /* 🛠️ 配合按鈕高度 */
+        margin-bottom: 0px; 
+        min-width: auto; 
+        opacity: 0; 
+        transition: opacity 0.3s;
+        pointer-events: none;
+      }
+      
+      /* 🛠️ 刪除了原本強制靠右的媒體查詢 */
+
+      .spinner-s {
+        border: 2px solid #e0f2f1;
+        border-top: 2px solid var(--primary-color);
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        animation: spin 1s linear infinite;
+      }
+
+      #loading-text-s { font-size: 12px; color: var(--text-light); white-space: nowrap; }
+
+      /* 內容區域 Grid */
       #content { display: grid; gap: 20px; grid-template-columns: 1fr; }
       @media (min-width: 600px) { #content { grid-template-columns: repeat(2, 1fr); } }
-      @media (min-width: 1024px) { #content { grid-template-columns: repeat(4, 1fr); } } /* 四欄 */
+      @media (min-width: 1024px) { #content { grid-template-columns: repeat(4, 1fr); } }
 
       .card { 
         background: var(--card-bg); border-radius: 12px; padding: 20px; 
@@ -85,39 +109,28 @@
       }
       .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
       
-      .card h3 { 
-        margin: 0 0 10px 0; 
-        font-size: 1.25em; 
-        font-weight: 700; 
-        color: #263238;
-      }
-      
+      .card h3 { margin: 0 0 10px 0; font-size: 1.25em; font-weight: 700; color: #263238; }
       .tags { margin-bottom: 10px; }
       .tag { display: inline-block; background: var(--tag-bg); color: var(--tag-text); font-size: 0.8em; padding: 3px 8px; border-radius: 6px; margin-right: 4px; margin-bottom: 6px; font-weight: 500; }
       .tag-type { background-color: #fff3e0; color: #e65100; }
-      
       .meta { font-size: 0.85em; color: var(--text-light); margin-bottom: 15px; font-weight: 500; line-height: 1.6; }
       
       .btn { display: block; background-color: var(--primary-color); color: white; text-align: center; padding: 10px; text-decoration: none; border-radius: 8px; font-weight: 500; transition: background 0.3s; }
       .btn:hover { background-color: var(--primary-dark); }
       .btn.disabled { background-color: #cfd8dc; color: #90a4ae; cursor: not-allowed; pointer-events: none; }
 
-      /* Spinner */
-      #loading { text-align: center; padding: 50px; color: var(--text-light); }
-      .spinner {
-        border: 4px solid #e0f2f1; border-top: 4px solid var(--primary-color);
-        border-radius: 50%; width: 40px; height: 40px;
-        animation: spin 1s linear infinite; margin: 0 auto 15px auto;
-      }
-      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      #first-load-loading { text-align: center; padding: 50px; color: var(--text-light); }
 
       footer { background-color: #263238; color: #b0bec5; padding: 40px 20px; margin-top: 50px; text-align: center; font-size: 0.9em; }
       .disclaimer-box { max-width: 850px; margin: 0 auto 20px; border: 1px solid #37474f; padding: 20px; border-radius: 12px; background: rgba(255,255,255,0.05); line-height: 1.7; }
       .copyright { color: #80cbc4; font-weight: bold; font-size: 1.1em; display: block; margin-top: 10px; }
       
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
       @media (max-width: 600px) {
         .control-panel { flex-direction: column; align-items: stretch; }
         .filter-group, #searchInput, .btn-reset { width: 100%; }
+        .mini-loading-container { justify-content: center; margin-top: 5px; }
         header h1 { font-size: 1.5em; }
       }
     </style>
@@ -134,7 +147,7 @@
       <div class="control-panel">
         <div class="filter-group">
             <label>🔍 關鍵字搜尋</label>
-            <input type="text" id="searchInput" oninput="filterData()" placeholder="搜尋教材名稱...">
+            <input type="text" id="searchInput" onkeyup="debounceFilter()" placeholder="搜尋教材名稱...">
         </div>
         
         <div class="filter-group"><label>🎓 年級</label><select id="gradeSelect" onchange="filterData()"><option value="All">全部</option></select></div>
@@ -143,11 +156,16 @@
         <div class="filter-group"><label>👤 學生特性</label><select id="charSelect" onchange="filterData()"><option value="All">全部</option></select></div>
         
         <button class="btn-reset" onclick="resetFilters()">清除篩選</button>
+
+        <div id="mini-loading" class="mini-loading-container">
+          <div class="spinner-s"></div>
+          <span id="loading-text-s">同步中...</span>
+        </div>
       </div>
 
-      <div id="loading">
-        <div class="spinner"></div>
-        <div>🚀 正在連線至 Google 雲端載入教材...</div>
+      <div id="first-load-loading" style="display:none;">
+          <div class="spinner-s" style="width:40px; height:40px; margin:0 auto 15px; border-width:4px;"></div>
+          <div>正在連線至雲端載入教材...</div>
       </div>
       
       <div id="content"></div>
@@ -163,6 +181,9 @@
 
     <script>
       const API_URL = "https://script.google.com/macros/s/AKfycbx_j6IJv8JZcycXQ8U8HTHCbsP7s6VixUG7TsUfgHd8Y-5pyHf4COdfzTsnvDHPoS1M2A/exec";
+      const CACHE_KEY = "sped_data_v1";
+      const CACHE_TIME_KEY = "sped_timestamp";
+      const CACHE_DURATION = 10 * 60 * 1000; // 10分鐘快取
 
       const COL_CREATOR_IDX = 1;
       const COL_NAME_IDX = 2;
@@ -175,23 +196,28 @@
       const GRADE_ORDER = ["學前", "小一", "小二", "小三", "小四", "小五", "小六", "國一", "國二", "國三", "高一", "高二", "高三", "不限定"];
       
       let allData = [];
+      let searchTimer;
 
       window.onload = async function() {
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
+        const now = new Date().getTime();
+        const miniLoading = document.getElementById('mini-loading');
+
+        if (cachedData && cachedTime && (now - cachedTime < CACHE_DURATION)) {
+            allData = JSON.parse(cachedData);
+            processAndRender(allData, true); 
+            miniLoading.style.opacity = "1";
+        } else {
+            document.getElementById('first-load-loading').style.display = 'block';
+        }
+
         try {
           const response = await fetch(API_URL);
           const data = await response.json();
-          processData(data);
-        } catch (e) {
-          document.getElementById('loading').innerHTML = "❌ 載入失敗，請確認 API 網址是否正確並已發布為「任何人」。<br>" + e;
-          console.error(e);
-        }
-      };
-
-      function processData(data) {
-        document.getElementById('loading').style.display = 'none';
-        data.shift(); 
-
-        allData = data.map(row => ({
+          data.shift(); 
+          
+          const freshData = data.map(row => ({
             creator: row[COL_CREATOR_IDX],
             name: row[COL_NAME_IDX],
             subject: row[COL_SUBJECT_IDX],
@@ -199,20 +225,40 @@
             link: row[COL_LINK_IDX],
             type: row[COL_TYPE_IDX],
             char: row[COL_CHAR_IDX]
-        }));
+          }));
 
+          localStorage.setItem(CACHE_KEY, JSON.stringify(freshData));
+          localStorage.setItem(CACHE_TIME_KEY, now.toString());
+
+          allData = freshData;
+          processAndRender(allData, false);
+        } catch (e) {
+          miniLoading.style.opacity = "0";
+          document.getElementById('first-load-loading').style.display = 'none';
+          console.error("Fetch error:", e);
+        }
+      };
+
+      function processAndRender(data, isUpdating) {
+        document.getElementById('first-load-loading').style.display = 'none';
+        
+        if (!isUpdating) {
+            document.getElementById('mini-loading').style.opacity = "0";
+        }
+        
         populateDropdown('gradeSelect', 'grade');
         populateDropdown('subjectSelect', 'subject');
         populateDropdown('typeSelect', 'type');
         populateDropdown('charSelect', 'char');
-
-        renderCards(allData);
+        renderCards(data);
       }
 
       function populateDropdown(elementId, key) {
         const select = document.getElementById(elementId);
-        let valuesSet = new Set();
+        const currentValue = select.value;
+        select.innerHTML = '<option value="All">全部</option>'; 
         
+        let valuesSet = new Set();
         allData.forEach(item => {
           let rawValue = String(item[key] || "");
           if (rawValue.trim() !== "") {
@@ -222,7 +268,6 @@
         });
 
         let uniqueValues = Array.from(valuesSet);
-        
         if (key === 'grade') {
           uniqueValues.sort((a, b) => {
              let idxA = GRADE_ORDER.indexOf(a);
@@ -238,6 +283,12 @@
           opt.value = val; opt.text = val; 
           select.appendChild(opt);
         });
+        select.value = currentValue;
+      }
+
+      function debounceFilter() {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => { filterData(); }, 300);
       }
 
       function filterData() {
@@ -248,18 +299,11 @@
         const char = document.getElementById('charSelect').value;
 
         const filtered = allData.filter(item => {
-          const nameStr = String(item.name || "").toLowerCase();
-          const gradeStr = String(item.grade || "");
-          const subjectStr = String(item.subject || "");
-          const typeStr = String(item.type || "");
-          const charStr = String(item.char || "");
-
-          const matchKeyword = nameStr.includes(keyword);
-          const matchGrade = (grade === 'All') || gradeStr.includes(grade);
-          const matchSubject = (subject === 'All') || subjectStr.includes(subject);
-          const matchType = (type === 'All') || typeStr.includes(type);
-          const matchChar = (char === 'All') || charStr.includes(char);
-
+          const matchKeyword = String(item.name || "").toLowerCase().includes(keyword);
+          const matchGrade = (grade === 'All') || String(item.grade || "").includes(grade);
+          const matchSubject = (subject === 'All') || String(item.subject || "").includes(subject);
+          const matchType = (type === 'All') || String(item.type || "").includes(type);
+          const matchChar = (char === 'All') || String(item.char || "").includes(char);
           return matchKeyword && matchGrade && matchSubject && matchType && matchChar;
         });
 
@@ -277,13 +321,12 @@
 
       function renderCards(data) {
         const container = document.getElementById('content');
-        
         if(data.length === 0) { 
-            container.innerHTML = "<div style='grid-column:1/-1; text-align:center; color:#888; padding: 40px;'>🔍 找不到符合條件的教材，請嘗試調整篩選條件。</div>"; 
+            container.innerHTML = "<div style='grid-column:1/-1; text-align:center; color:#888; padding: 40px;'>🔍 找不到符合條件的教材。</div>"; 
             return; 
         }
 
-        const htmlString = data.map(item => {
+        container.innerHTML = data.map(item => {
           let link = String(item.link || "").trim();
           let btnHtml = (link.startsWith("http")) 
             ? `<a href="${link}" target="_blank" class="btn">前往教材</a>` 
@@ -306,8 +349,6 @@
               ${btnHtml}
             </div>`;
         }).join('');
-
-        container.innerHTML = htmlString;
       }
     </script>
   </body>
