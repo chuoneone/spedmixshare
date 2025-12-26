@@ -53,13 +53,12 @@
 
       .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; flex: 1; box-sizing: border-box; width: 100%; }
       
-      /* 控制面板樣式 */
       .control-panel { 
         background: white; padding: 25px; border-radius: 12px; 
         box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px; 
         display: flex; flex-wrap: wrap; gap: 15px; 
         align-items: flex-end; 
-        justify-content: center; /* 🛠️ 改為 center 讓面板在電腦版居中 */
+        justify-content: center; 
       }
       
       .filter-group { display: flex; flex-direction: column; gap: 5px; }
@@ -79,12 +78,11 @@
       }
       .btn-reset:hover { background-color: #78909c; }
 
-      /* 🟢 載入動畫樣式：已修正位置 */
       .mini-loading-container {
         display: flex;
         align-items: center;
         gap: 8px;
-        height: 40px; /* 🛠️ 配合按鈕高度 */
+        height: 40px; 
         margin-bottom: 0px; 
         min-width: auto; 
         opacity: 0; 
@@ -92,8 +90,6 @@
         pointer-events: none;
       }
       
-      /* 🛠️ 刪除了原本強制靠右的媒體查詢 */
-
       .spinner-s {
         border: 2px solid #e0f2f1;
         border-top: 2px solid var(--primary-color);
@@ -105,7 +101,6 @@
 
       #loading-text-s { font-size: 12px; color: var(--text-light); white-space: nowrap; }
 
-      /* 內容區域 Grid */
       #content { display: grid; gap: 20px; grid-template-columns: 1fr; }
       @media (min-width: 600px) { #content { grid-template-columns: repeat(2, 1fr); } }
       @media (min-width: 1024px) { #content { grid-template-columns: repeat(4, 1fr); } }
@@ -162,7 +157,7 @@
         <div class="filter-group"><label>🎓 年級</label><select id="gradeSelect" onchange="filterData()"><option value="All">全部</option></select></div>
         <div class="filter-group"><label>📖 科目</label><select id="subjectSelect" onchange="filterData()"><option value="All">全部</option></select></div>
         <div class="filter-group"><label>📂 類型</label><select id="typeSelect" onchange="filterData()"><option value="All">全部</option></select></div>
-        <div class="filter-group"><label>👤 學生特性</label><select id="charSelect" onchange="filterData()"><option value="All">全部</option></select></div>
+        <div class="filter-group"><label>🧠 認知程度</label><select id="charSelect" onchange="filterData()"><option value="All">全部</option></select></div>
         
         <button class="btn-reset" onclick="resetFilters()">清除篩選</button>
 
@@ -192,7 +187,7 @@
       const API_URL = "https://script.google.com/macros/s/AKfycbx_j6IJv8JZcycXQ8U8HTHCbsP7s6VixUG7TsUfgHd8Y-5pyHf4COdfzTsnvDHPoS1M2A/exec";
       const CACHE_KEY = "sped_data_v1";
       const CACHE_TIME_KEY = "sped_timestamp";
-      const CACHE_DURATION = 10 * 60 * 1000; // 10分鐘快取
+      const CACHE_DURATION = 10 * 60 * 1000; 
 
       const COL_CREATOR_IDX = 1;
       const COL_NAME_IDX = 2;
@@ -204,6 +199,9 @@
 
       const GRADE_ORDER = ["學前", "小一", "小二", "小三", "小四", "小五", "小六", "國一", "國二", "國三", "高一", "高二", "高三", "不限定"];
       
+      // 🛠️ 定義認知程度的排序順序
+      const COGNITIVE_ORDER = ["認知功能無缺損", "認知功能輕微缺損", "認知功能中度缺損", "認知功能嚴重缺損", "不分程度 / 通用型"];
+
       let allData = [];
       let searchTimer;
 
@@ -283,6 +281,13 @@
              let idxB = GRADE_ORDER.indexOf(b);
              return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
           });
+        } else if (key === 'char') {
+          // 🛠️ 讓認知程度依照指定順序排列
+          uniqueValues.sort((a, b) => {
+             let idxA = COGNITIVE_ORDER.indexOf(a);
+             let idxB = COGNITIVE_ORDER.indexOf(b);
+             return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+          });
         } else {
           uniqueValues.sort();
         }
@@ -352,7 +357,7 @@
                 <h3>${item.name || "未命名教材"}</h3>
                 <div class="meta">
                     👤 分享者：${item.creator || "匿名"}<br>
-                    🧩 適用：${item.char || "不限"}
+                    📊 程度：${item.char || "不限"}
                 </div>
               </div>
               ${btnHtml}
