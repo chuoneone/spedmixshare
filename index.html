@@ -32,6 +32,32 @@
       header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 40px 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
       header h1 { margin: 0; font-size: 2em; font-weight: 700; letter-spacing: 1px; }
       header p { margin-top: 10px; opacity: 0.9; margin-bottom: 20px; }
+/* 新增：尊重原創聲明區塊樣式 */
+      .notice-box {
+        background: rgba(255, 255, 255, 0.15); /* 半透明白色背景 */
+        border: 1px solid rgba(255, 255, 255, 0.3); /* 微微發光的邊框 */
+        border-radius: 12px;
+        padding: 15px 25px;
+        max-width: 700px; /* 限制寬度，避免在電腦版太長 */
+        margin: 20px auto; /* 置中 */
+        text-align: left; /* 文字靠左比較好閱讀 */
+        backdrop-filter: blur(5px); /* 磨砂玻璃效果 */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      }
+      .notice-title {
+        font-weight: 700;
+        font-size: 1.05em;
+        margin-bottom: 8px;
+        display: block;
+        color: #ffffff;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      }
+      .notice-content {
+        font-size: 0.9em;
+        line-height: 1.6;
+        margin: 0;
+        color: #f1f8e9; /* 稍微帶點米白，閱讀比較舒服 */
+      }
 
       .btn-share {
         display: inline-block;
@@ -119,6 +145,13 @@
       .tag-type { background-color: #fff3e0; color: #e65100; }
       .meta { font-size: 0.85em; color: var(--text-light); margin-bottom: 15px; font-weight: 500; line-height: 1.6; }
       
+      /* 教材卡片內的授權標籤樣式 */
+      .tag-mini { font-size: 0.85em; padding: 2px 6px; border-radius: 4px; font-weight: bold; cursor: help; vertical-align: middle; }
+      .tag-license-cc { background-color: #e0f2f1; color: #00796b; border: 1px solid #00796b; }
+      .tag-license-view { background-color: #fff3e0; color: #e65100; border: 1px solid #e65100; }
+      .tag-license-cc0 { background-color: #eceff1; color: #455a64; border: 1px solid #455a64; }
+      .tag-license-other { background-color: #f5f5f5; color: #9e9e9e; }
+
       .btn { display: block; background-color: var(--primary-color); color: white; text-align: center; padding: 10px; text-decoration: none; border-radius: 8px; font-weight: 500; transition: background 0.3s; }
       .btn:hover { background-color: var(--primary-dark); }
       .btn.disabled { background-color: #cfd8dc; color: #90a4ae; cursor: not-allowed; pointer-events: none; }
@@ -126,7 +159,14 @@
       #first-load-loading { text-align: center; padding: 50px; color: var(--text-light); }
 
       footer { background-color: #263238; color: #b0bec5; padding: 40px 20px; margin-top: 50px; text-align: center; font-size: 0.9em; }
-      .disclaimer-box { max-width: 850px; margin: 0 auto 20px; border: 1px solid #37474f; padding: 20px; border-radius: 12px; background: rgba(255,255,255,0.05); line-height: 1.7; }
+      .disclaimer-box { max-width: 900px; margin: 0 auto 20px; border: 1px solid #37474f; padding: 20px; border-radius: 12px; background: rgba(255,255,255,0.05); line-height: 1.7; }
+      
+      /* 頁尾授權說明區塊 */
+      .license-explanation { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; text-align: left; }
+      .license-item { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; border-left: 4px solid #80cbc4; }
+      .license-title { font-weight: bold; color: #80cbc4; margin-bottom: 5px; display: block; }
+      .license-desc { font-size: 0.85em; color: #b0bec5; line-height: 1.5; }
+
       .copyright { color: #80cbc4; font-weight: bold; font-size: 1.1em; display: block; margin-top: 10px; }
       
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -141,9 +181,18 @@
   </head>
   <body>
 
-    <header>
+  <header>
       <h1>📝特教教材資源共享平台</h1>
-      <p>匯集各路特教老師的智慧，讓備課更輕鬆</p>
+      <p style="font-size: 1.1em; font-weight: 500; margin-bottom: 15px;">匯集各路特教老師的智慧，讓備課更輕鬆</p>
+      
+      <div class="notice-box">
+        <span class="notice-title">⚠️ 尊重原創聲明</span>
+        <p class="notice-content">
+          本平台之資源皆為特教老師們無私分享。若您需於公開場合分享或引用，
+          <strong>請務必標註來源</strong>以尊重原創者，並請依照原創者所設定的授權規範使用，共同維護良善的分享循環。
+        </p>
+      </div>
+
       <a href="https://forms.gle/39VbaK5bLfzqMHz69" target="_blank" class="btn-share">📤 我要分享教材</a>
     </header>
 
@@ -177,6 +226,23 @@
 
     <footer>
       <div class="disclaimer-box">
+        <p><strong>📜 教材授權說明</strong></p>
+        <div class="license-explanation">
+            <div class="license-item" style="border-color: #4DB6AC;">
+                <span class="license-title">🎨 CC BY-NC-SA 授權</span>
+                <span class="license-desc">允許非商業性使用、修改、再分享，但須註明作者，且須以同樣授權分享。</span>
+            </div>
+            <div class="license-item" style="border-color: #FFB74D;">
+                <span class="license-title">👁️ 僅供查看與參考</span>
+                <span class="license-desc">僅允許教學使用，不允許修改或二次創作，版權歸原作者所有。</span>
+            </div>
+            <div class="license-item" style="border-color: #90A4AE;">
+                <span class="license-title">🔓 CC0 / 公有領域</span>
+                <span class="license-desc">作者放棄所有版權，允許自由修改、使用，無需標註來源。</span>
+            </div>
+        </div>
+        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+
         <p><strong>⚠️ 免責聲明 (Disclaimer)</strong></p>
         <p>本平台之教材內容均由各特教老師分享，本人僅負責彙整與架設。教材版權歸原作者所有，連結有效性請自行斟酌。</p>
       </div>
@@ -195,6 +261,7 @@
       const COL_GRADE_IDX = 4;
       const COL_LINK_IDX = 5;
       const COL_TYPE_IDX = 10;
+      const COL_LICENSE_IDX = 11; // 授權條款
       const COL_CHAR_IDX = 13;
 
       const GRADE_ORDER = ["學前", "小一", "小二", "小三", "小四", "小五", "小六", "國一", "國二", "國三", "高一", "高二", "高三", "不限定"];
@@ -231,6 +298,7 @@
             grade: row[COL_GRADE_IDX],
             link: row[COL_LINK_IDX],
             type: row[COL_TYPE_IDX],
+            license: row[COL_LICENSE_IDX], // 讀取授權欄位
             char: row[COL_CHAR_IDX]
           }));
 
@@ -346,6 +414,22 @@
             ? `<a href="${link}" target="_blank" class="btn">前往教材</a>` 
             : `<div class="btn disabled">無連結</div>`;
 
+          // 處理授權標籤的邏輯
+          let licRaw = String(item.license || "");
+          let licShort = "未知授權";
+          let licClass = "tag-license-other";
+
+          if(licRaw.includes("CC BY-NC-SA")) { 
+            licShort = "CC BY-NC-SA"; 
+            licClass = "tag-license-cc"; 
+          } else if(licRaw.includes("僅供查看")) { 
+            licShort = "僅供查看"; 
+            licClass = "tag-license-view"; 
+          } else if(licRaw.includes("CC0")) { 
+            licShort = "CC0 公有領域"; 
+            licClass = "tag-license-cc0"; 
+          }
+
           return `
             <div class="card">
               <div>
@@ -357,7 +441,8 @@
                 <h3>${item.name || "未命名教材"}</h3>
                 <div class="meta">
                     👤 分享者：${item.creator || "匿名"}<br>
-                    📊 程度：${item.char || "不限"}
+                    📊 程度：${item.char || "不限"}<br>
+                    ⚖️ 授權：<span class="tag-mini ${licClass}" title="${licRaw}">${licShort}</span>
                 </div>
               </div>
               ${btnHtml}
@@ -368,4 +453,3 @@
   </body>
 
 </html>
-
