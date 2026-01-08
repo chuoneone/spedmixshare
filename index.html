@@ -3,6 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="manifest" href="manifest_share.json">
+    <meta name="theme-color" content="#4DB6AC">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="images/sped2.png">
+
     <title>特教教材資源共享平台 | 米克師</title>
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
@@ -10,12 +17,11 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-5BBHYN77N9');
     </script>
 
     <link rel="icon" href="sped.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+TC&display=swap" rel="stylesheet">
     <style>
       :root {
         --primary-color: #4DB6AC;
@@ -32,32 +38,20 @@
       header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 40px 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
       header h1 { margin: 0; font-size: 2em; font-weight: 700; letter-spacing: 1px; }
       header p { margin-top: 10px; opacity: 0.9; margin-bottom: 20px; }
-/* 新增：尊重原創聲明區塊樣式 */
+
       .notice-box {
-        background: rgba(255, 255, 255, 0.15); /* 半透明白色背景 */
-        border: 1px solid rgba(255, 255, 255, 0.3); /* 微微發光的邊框 */
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         border-radius: 12px;
         padding: 15px 25px;
-        max-width: 700px; /* 限制寬度，避免在電腦版太長 */
-        margin: 20px auto; /* 置中 */
-        text-align: left; /* 文字靠左比較好閱讀 */
-        backdrop-filter: blur(5px); /* 磨砂玻璃效果 */
+        max-width: 700px;
+        margin: 20px auto;
+        text-align: left;
+        backdrop-filter: blur(5px);
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
       }
-      .notice-title {
-        font-weight: 700;
-        font-size: 1.05em;
-        margin-bottom: 8px;
-        display: block;
-        color: #ffffff;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-      }
-      .notice-content {
-        font-size: 0.9em;
-        line-height: 1.6;
-        margin: 0;
-        color: #f1f8e9; /* 稍微帶點米白，閱讀比較舒服 */
-      }
+      .notice-title { font-weight: 700; font-size: 1.05em; margin-bottom: 8px; display: block; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+      .notice-content { font-size: 0.9em; line-height: 1.6; margin: 0; color: #f1f8e9; }
 
       .btn-share {
         display: inline-block;
@@ -71,11 +65,7 @@
         transition: all 0.3s ease;
         margin-top: 10px;
       }
-      .btn-share:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-        background-color: #f1f8e9;
-      }
+      .btn-share:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); background-color: #f1f8e9; }
 
       .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; flex: 1; box-sizing: border-box; width: 100%; }
       
@@ -109,8 +99,6 @@
         align-items: center;
         gap: 8px;
         height: 40px; 
-        margin-bottom: 0px; 
-        min-width: auto; 
         opacity: 0; 
         transition: opacity 0.3s;
         pointer-events: none;
@@ -145,7 +133,6 @@
       .tag-type { background-color: #fff3e0; color: #e65100; }
       .meta { font-size: 0.85em; color: var(--text-light); margin-bottom: 15px; font-weight: 500; line-height: 1.6; }
       
-      /* 教材卡片內的授權標籤樣式 */
       .tag-mini { font-size: 0.85em; padding: 2px 6px; border-radius: 4px; font-weight: bold; cursor: help; vertical-align: middle; }
       .tag-license-cc { background-color: #e0f2f1; color: #00796b; border: 1px solid #00796b; }
       .tag-license-view { background-color: #fff3e0; color: #e65100; border: 1px solid #e65100; }
@@ -161,7 +148,6 @@
       footer { background-color: #263238; color: #b0bec5; padding: 40px 20px; margin-top: 50px; text-align: center; font-size: 0.9em; }
       .disclaimer-box { max-width: 900px; margin: 0 auto 20px; border: 1px solid #37474f; padding: 20px; border-radius: 12px; background: rgba(255,255,255,0.05); line-height: 1.7; }
       
-      /* 頁尾授權說明區塊 */
       .license-explanation { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; text-align: left; }
       .license-item { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; border-left: 4px solid #80cbc4; }
       .license-title { font-weight: bold; color: #80cbc4; margin-bottom: 5px; display: block; }
@@ -174,7 +160,6 @@
       @media (max-width: 600px) {
         .control-panel { flex-direction: column; align-items: stretch; }
         .filter-group, #searchInput, .btn-reset { width: 100%; }
-        .mini-loading-container { justify-content: center; margin-top: 5px; }
         header h1 { font-size: 1.5em; }
       }
     </style>
@@ -250,6 +235,15 @@
     </footer>
 
     <script>
+      // PWA Service Worker 註冊
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw_share.js')
+            .then(reg => console.log('教材平台 PWA 註冊成功'))
+            .catch(err => console.log('PWA 註冊失敗', err));
+        });
+      }
+
       const API_URL = "https://script.google.com/macros/s/AKfycbx_j6IJv8JZcycXQ8U8HTHCbsP7s6VixUG7TsUfgHd8Y-5pyHf4COdfzTsnvDHPoS1M2A/exec";
       const CACHE_KEY = "sped_data_v1";
       const CACHE_TIME_KEY = "sped_timestamp";
@@ -261,12 +255,10 @@
       const COL_GRADE_IDX = 4;
       const COL_LINK_IDX = 5;
       const COL_TYPE_IDX = 10;
-      const COL_LICENSE_IDX = 11; // 授權條款
+      const COL_LICENSE_IDX = 11; 
       const COL_CHAR_IDX = 13;
 
       const GRADE_ORDER = ["學前", "小一", "小二", "小三", "小四", "小五", "小六", "國一", "國二", "國三", "高一", "高二", "高三", "不限定"];
-      
-      // 🛠️ 定義認知程度的排序順序
       const COGNITIVE_ORDER = ["認知功能無缺損", "認知功能輕微缺損", "認知功能中度缺損", "認知功能嚴重缺損", "不分程度 / 通用型"];
 
       let allData = [];
@@ -298,7 +290,7 @@
             grade: row[COL_GRADE_IDX],
             link: row[COL_LINK_IDX],
             type: row[COL_TYPE_IDX],
-            license: row[COL_LICENSE_IDX], // 讀取授權欄位
+            license: row[COL_LICENSE_IDX],
             char: row[COL_CHAR_IDX]
           }));
 
@@ -316,11 +308,7 @@
 
       function processAndRender(data, isUpdating) {
         document.getElementById('first-load-loading').style.display = 'none';
-        
-        if (!isUpdating) {
-            document.getElementById('mini-loading').style.opacity = "0";
-        }
-        
+        if (!isUpdating) { document.getElementById('mini-loading').style.opacity = "0"; }
         populateDropdown('gradeSelect', 'grade');
         populateDropdown('subjectSelect', 'subject');
         populateDropdown('typeSelect', 'type');
@@ -332,7 +320,6 @@
         const select = document.getElementById(elementId);
         const currentValue = select.value;
         select.innerHTML = '<option value="All">全部</option>'; 
-        
         let valuesSet = new Set();
         allData.forEach(item => {
           let rawValue = String(item[key] || "");
@@ -350,15 +337,12 @@
              return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
           });
         } else if (key === 'char') {
-          // 🛠️ 讓認知程度依照指定順序排列
           uniqueValues.sort((a, b) => {
              let idxA = COGNITIVE_ORDER.indexOf(a);
              let idxB = COGNITIVE_ORDER.indexOf(b);
              return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
           });
-        } else {
-          uniqueValues.sort();
-        }
+        } else { uniqueValues.sort(); }
 
         uniqueValues.forEach(val => {
           let opt = document.createElement("option");
@@ -388,7 +372,6 @@
           const matchChar = (char === 'All') || String(item.char || "").includes(char);
           return matchKeyword && matchGrade && matchSubject && matchType && matchChar;
         });
-
         renderCards(filtered);
       }
 
@@ -414,21 +397,13 @@
             ? `<a href="${link}" target="_blank" class="btn">前往教材</a>` 
             : `<div class="btn disabled">無連結</div>`;
 
-          // 處理授權標籤的邏輯
           let licRaw = String(item.license || "");
           let licShort = "未知授權";
           let licClass = "tag-license-other";
 
-          if(licRaw.includes("CC BY-NC-SA")) { 
-            licShort = "CC BY-NC-SA"; 
-            licClass = "tag-license-cc"; 
-          } else if(licRaw.includes("僅供查看")) { 
-            licShort = "僅供查看"; 
-            licClass = "tag-license-view"; 
-          } else if(licRaw.includes("CC0")) { 
-            licShort = "CC0 公有領域"; 
-            licClass = "tag-license-cc0"; 
-          }
+          if(licRaw.includes("CC BY-NC-SA")) { licShort = "CC BY-NC-SA"; licClass = "tag-license-cc"; } 
+          else if(licRaw.includes("僅供查看")) { licShort = "僅供查看"; licClass = "tag-license-view"; } 
+          else if(licRaw.includes("CC0")) { licShort = "CC0 公有領域"; licClass = "tag-license-cc0"; }
 
           return `
             <div class="card">
@@ -451,5 +426,4 @@
       }
     </script>
   </body>
-
 </html>
