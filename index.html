@@ -3,15 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
     <link rel="manifest" href="manifest_share.json">
-    <meta name="theme-color" content="#4DB6AC">
+    <meta name="theme-color" content="#0B4C5F">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="images/sped2.png">
-
     <title>特教教材資源共享平台 | 米克師</title>
-    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BBHYN77N9"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -19,156 +16,240 @@
       gtag('js', new Date());
       gtag('config', 'G-5BBHYN77N9');
     </script>
-
     <link rel="icon" href="sped.ico">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+TC&display=swap" rel="stylesheet">
     <style>
       :root {
-        --primary-color: #4DB6AC;
-        --primary-dark: #00897B;
-        --bg-color: #f0f4f7;
-        --card-bg: #ffffff;
-        --text-color: #37474f;
-        --text-light: #78909c;
-        --tag-bg: #e0f2f1;
-        --tag-text: #00796b;
+        /* --- 配色定義 --- */
+        --primary-orange: #E67432;   /* 活力橘 (按鈕/強調) */
+        --primary-teal: #0B4C5F;     /* 深海洋綠 (文字/深色背景) */
+        --sky-blue: #AEDEF4;         /* 清新藍 (裝飾/背景漸層) */
+        --warm-grey: #E1DFDD;        /* 暖沙灰 (背景基底) */
+        
+        --text-main: var(--primary-teal);
+        --text-light: #546E7A;
+
+        /* --- 玻璃擬態變數 (Glassmorphism) --- */
+        /* 淺色玻璃 (用於卡片、控制面板) */
+        --glass-bg-light: rgba(255, 255, 255, 0.65);
+        --glass-border-light: 1px solid rgba(255, 255, 255, 0.5);
+        --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        --backdrop-blur: blur(12px);
+
+        /* 深色玻璃 (用於頁首、頁尾) */
+        --glass-bg-dark: rgba(11, 76, 95, 0.85); /* 深海洋綠半透明 */
+        --glass-border-dark: 1px solid rgba(255, 255, 255, 0.15);
       }
-      body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+
+      body { 
+        font-family: 'Noto Sans TC', sans-serif; 
+        /* 背景改為柔和漸層，增加深度感，讓玻璃效果更明顯 */
+        background: linear-gradient(135deg, var(--warm-grey) 0%, var(--sky-blue) 100%);
+        color: var(--text-main); 
+        margin: 0; padding: 0; 
+        display: flex; flex-direction: column; 
+        min-height: 100vh; 
+        background-attachment: fixed; /* 讓背景固定，滾動時有視差感 */
+      }
       
-      header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 40px 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-      header h1 { margin: 0; font-size: 2em; font-weight: 700; letter-spacing: 1px; }
-      header p { margin-top: 10px; opacity: 0.9; margin-bottom: 20px; }
-
-      .notice-box {
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 12px;
-        padding: 15px 25px;
-        max-width: 700px;
-        margin: 20px auto;
-        text-align: left;
-        backdrop-filter: blur(5px);
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      /* --- Header: 深色玻璃效果 --- */
+      header { 
+        background: var(--glass-bg-dark);
+        backdrop-filter: var(--backdrop-blur);
+        -webkit-backdrop-filter: var(--backdrop-blur);
+        border-bottom: var(--glass-border-dark);
+        color: white; 
+        padding: 40px 20px; 
+        text-align: center; 
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        position: relative;
+        overflow: hidden;
       }
-      .notice-title { font-weight: 700; font-size: 1.05em; margin-bottom: 8px; display: block; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-      .notice-content { font-size: 0.9em; line-height: 1.6; margin: 0; color: #f1f8e9; }
+      /* 增加一個 header 內部的光暈裝飾 */
+      header::before {
+          content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+          background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+          pointer-events: none;
+      }
 
-      .btn-share {
+      header h1 { margin: 0; font-size: 2em; font-weight: 700; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+      header p { margin-top: 10px; opacity: 0.95; margin-bottom: 20px; font-weight: 500; }
+
+      /* Header 內的通知框：更透亮的玻璃 */
+      .notice-box {
+        background: rgba(255, 255, 255, 0.15); /* 比 header 更亮一點 */
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 16px; /* 更圓潤 */
+        padding: 20px 25px;
+        max-width: 700px;
+        margin: 25px auto;
+        text-align: left;
+        box-shadow: inset 0 0 15px rgba(255,255,255,0.05); /* 內發光感 */
+      }
+      .notice-title { font-weight: 700; font-size: 1.1em; margin-bottom: 8px; display: block; color: var(--sky-blue); text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+      .notice-content { font-size: 0.95em; line-height: 1.7; margin: 0; color: #f0f4f8; }
+
+      /* --- 按鈕：立體果凍感 --- */
+      .btn-share, .btn {
         display: inline-block;
-        background-color: #ffffff;
-        color: var(--primary-dark);
-        padding: 10px 24px;
+        /* 使用漸層製造立體感 */
+        background: linear-gradient(145deg, var(--primary-orange), #d16528);
+        color: white;
+        padding: 12px 30px;
         border-radius: 50px;
         text-decoration: none;
         font-weight: 700;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        /* 雙重陰影：一層深色製造距離，一層橘色製造發光感 */
+        box-shadow: 0 6px 15px rgba(230, 116, 50, 0.4), inset 0 2px 3px rgba(255,255,255,0.2);
         transition: all 0.3s ease;
-        margin-top: 10px;
+        border: none;
+        text-align: center;
       }
-      .btn-share:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); background-color: #f1f8e9; }
+      .btn-share { margin-top: 15px; font-size: 1.1em; }
+      .btn-share:hover, .btn:hover { 
+        transform: translateY(-3px) scale(1.02); 
+        box-shadow: 0 8px 25px rgba(230, 116, 50, 0.6), inset 0 2px 3px rgba(255,255,255,0.4);
+        background: linear-gradient(145deg, #f38446, var(--primary-orange));
+      }
+      .btn.disabled { background: #cfd8dc; color: #90a4ae; cursor: not-allowed; pointer-events: none; box-shadow: none; }
 
-      .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; flex: 1; box-sizing: border-box; width: 100%; }
+      .container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; flex: 1; box-sizing: border-box; width: 100%; }
       
+      /* --- 控制面板：淺色玻璃 --- */
       .control-panel { 
-        background: white; padding: 25px; border-radius: 12px; 
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 30px; 
-        display: flex; flex-wrap: wrap; gap: 15px; 
-        align-items: flex-end; 
-        justify-content: center; 
+        background: var(--glass-bg-light);
+        backdrop-filter: var(--backdrop-blur);
+        -webkit-backdrop-filter: var(--backdrop-blur);
+        border: var(--glass-border-light);
+        box-shadow: var(--glass-shadow);
+        border-radius: 20px; /* 更圓潤 */
+        padding: 30px; 
+        margin-bottom: 40px; 
+        display: flex; flex-wrap: wrap; gap: 20px; 
+        align-items: flex-end; justify-content: center;
+        /* 增加一點白色漸層模擬反光 */
+        background-image: linear-gradient(to bottom right, rgba(255,255,255,0.2), rgba(255,255,255,0));
       }
       
-      .filter-group { display: flex; flex-direction: column; gap: 5px; }
-      .filter-group label { font-size: 0.9em; font-weight: bold; color: var(--primary-dark); }
+      .filter-group label { font-size: 0.95em; font-weight: 700; color: var(--primary-teal); margin-bottom: 8px; display: block; }
       
-      #searchInput {
-        padding: 10px 15px; border-radius: 8px; border: 1px solid #cfd8dc;
-        font-size: 14px; width: 200px; max-width: 100%; box-sizing: border-box; transition: border 0.3s;
+      /* 輸入框與選單：半透明化 */
+      #searchInput, select {
+        padding: 12px 15px; border-radius: 10px; 
+        border: 2px solid rgba(255,255,255,0.5); /* 半透明邊框 */
+        font-size: 15px; background-color: rgba(255,255,255,0.7); /* 半透明背景 */
+        color: var(--primary-teal); font-weight: 500;
+        transition: all 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
       }
-      #searchInput:focus { border-color: var(--primary-color); outline: none; }
+      #searchInput { width: 220px; }
+      #searchInput:focus, select:focus { border-color: var(--primary-orange); outline: none; background-color: rgba(255,255,255,0.9); box-shadow: 0 0 0 3px rgba(230, 116, 50, 0.2); }
+      select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27292.4%27%20height%3F292.4%27%3E%3Cpath%20fill%3D%27%230B4C5F%27%20d%3D%27M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-13%205.4A17.6%2017.6%200%200%200%200%2087.2c0%205%201.8%209.3%205.4%2013l131.3%20131.3c3.6%203.6%207.9%205.4%2013%205.4s9.3-1.8%2013-5.4L287%20100.2c3.6-3.6%205.4-7.9%205.4-13%200-5-1.8-9.3-5.4-13z%27%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 12px top 50%; background-size: 12px auto; padding-right: 30px; }
 
-      select { padding: 10px 15px; border-radius: 8px; border: 1px solid #cfd8dc; font-size: 14px; background-color: #fff; min-width: 130px; cursor: pointer; }
-      
       .btn-reset {
-        background-color: #90a4ae; color: white; border: none; padding: 10px 20px;
-        border-radius: 8px; cursor: pointer; font-weight: 500; height: 40px; 
+        background: linear-gradient(145deg, #90a4ae, #78909c); color: white; border: none; padding: 12px 24px;
+        border-radius: 50px; cursor: pointer; font-weight: 600; height: auto; 
+        box-shadow: 0 4px 10px rgba(120, 144, 156, 0.3); transition: all 0.3s;
       }
-      .btn-reset:hover { background-color: #78909c; }
+      .btn-reset:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(120, 144, 156, 0.5); background: linear-gradient(145deg, #a7b6be, #869aa5); }
 
-      .mini-loading-container {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        height: 40px; 
-        opacity: 0; 
-        transition: opacity 0.3s;
-        pointer-events: none;
-      }
-      
-      .spinner-s {
-        border: 2px solid #e0f2f1;
-        border-top: 2px solid var(--primary-color);
-        border-radius: 50%;
-        width: 18px;
-        height: 18px;
-        animation: spin 1s linear infinite;
-      }
+      .mini-loading-container { display: flex; align-items: center; gap: 10px; height: 45px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+      .spinner-s { border: 3px solid rgba(11, 76, 95, 0.2); border-top: 3px solid var(--primary-orange); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+      #loading-text-s { font-size: 13px; color: var(--text-light); font-weight: 500; }
 
-      #loading-text-s { font-size: 12px; color: var(--text-light); white-space: nowrap; }
+      #content { display: grid; gap: 25px; grid-template-columns: 1fr; }
+      @media (min-width: 700px) { #content { grid-template-columns: repeat(2, 1fr); } }
+      @media (min-width: 1100px) { #content { grid-template-columns: repeat(3, 1fr); } }
+      @media (min-width: 1400px) { #content { grid-template-columns: repeat(4, 1fr); } }
 
-      #content { display: grid; gap: 20px; grid-template-columns: 1fr; }
-      @media (min-width: 600px) { #content { grid-template-columns: repeat(2, 1fr); } }
-      @media (min-width: 1024px) { #content { grid-template-columns: repeat(4, 1fr); } }
-
+      /* --- 卡片：淺色玻璃 --- */
       .card { 
-        background: var(--card-bg); border-radius: 12px; padding: 20px; 
-        box-shadow: 0 3px 6px rgba(0,0,0,0.05); border-left: 6px solid var(--primary-color); 
-        transition: transform 0.2s, box-shadow 0.2s; 
-        display: flex; flex-direction: column; justify-content: space-between; 
+        background: var(--glass-bg-light);
+        backdrop-filter: var(--backdrop-blur);
+        -webkit-backdrop-filter: var(--backdrop-blur);
+        border: var(--glass-border-light);
+        box-shadow: var(--glass-shadow);
+        border-radius: 16px; 
+        padding: 25px; 
+        transition: all 0.3s ease;
+        display: flex; flex-direction: column; justify-content: space-between;
+        /* 移除舊的左側邊框，改用整體發光感 */
+        position: relative; overflow: hidden;
       }
-      .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+      /* 卡片懸停效果：更浮起、邊框更亮 */
+      .card:hover { 
+        transform: translateY(-8px) scale(1.01); 
+        box-shadow: 0 15px 40px rgba(31, 38, 135, 0.15);
+        border-color: rgba(255, 255, 255, 0.8);
+      }
+      /* 卡片頂部裝飾條 (取代舊的左側邊框) */
+      .card::before {
+          content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+          background: linear-gradient(90deg, var(--primary-teal), var(--sky-blue));
+          opacity: 0.8;
+      }
       
-      .card h3 { margin: 0 0 10px 0; font-size: 1.25em; font-weight: 700; color: #263238; }
-      .tags { margin-bottom: 10px; }
-      .tag { display: inline-block; background: var(--tag-bg); color: var(--tag-text); font-size: 0.8em; padding: 3px 8px; border-radius: 6px; margin-right: 4px; margin-bottom: 6px; font-weight: 500; }
-      .tag-type { background-color: #fff3e0; color: #e65100; }
-      .meta { font-size: 0.85em; color: var(--text-light); margin-bottom: 15px; font-weight: 500; line-height: 1.6; }
+      .card h3 { margin: 15px 0 10px 0; font-size: 1.3em; font-weight: 700; color: var(--primary-teal); line-height: 1.4; }
+      .tags { margin-bottom: 12px; }
+      /* 標籤：使用清新藍，稍微透明 */
+      .tag { display: inline-block; background: rgba(174, 222, 244, 0.3); color: var(--primary-teal); font-size: 0.85em; padding: 4px 10px; border-radius: 8px; margin-right: 5px; margin-bottom: 6px; font-weight: 600; border: 1px solid rgba(174, 222, 244, 0.5); }
+      .tag-type { background-color: rgba(255, 243, 224, 0.5); color: #e65100; border: 1px solid rgba(255, 183, 77, 0.5); }
+      .meta { font-size: 0.9em; color: var(--text-light); margin-bottom: 20px; font-weight: 500; line-height: 1.8; }
       
-      .tag-mini { font-size: 0.85em; padding: 2px 6px; border-radius: 4px; font-weight: bold; cursor: help; vertical-align: middle; }
-      .tag-license-cc { background-color: #e0f2f1; color: #00796b; border: 1px solid #00796b; }
-      .tag-license-view { background-color: #fff3e0; color: #e65100; border: 1px solid #e65100; }
-      .tag-license-cc0 { background-color: #eceff1; color: #455a64; border: 1px solid #455a64; }
-      .tag-license-other { background-color: #f5f5f5; color: #9e9e9e; }
+      .tag-mini { font-size: 0.85em; padding: 3px 8px; border-radius: 6px; font-weight: 700; vertical-align: middle; display: inline-block; margin-top: 4px; }
+      .tag-license-cc { background: rgba(0, 121, 107, 0.15); color: #00796b; }
+      .tag-license-view { background: rgba(230, 81, 0, 0.15); color: #e65100; }
+      .tag-license-cc0 { background: rgba(69, 90, 100, 0.15); color: #455a64; }
 
-      .btn { display: block; background-color: var(--primary-color); color: white; text-align: center; padding: 10px; text-decoration: none; border-radius: 8px; font-weight: 500; transition: background 0.3s; }
-      .btn:hover { background-color: var(--primary-dark); }
-      .btn.disabled { background-color: #cfd8dc; color: #90a4ae; cursor: not-allowed; pointer-events: none; }
+      .btn { 
+        padding: 12px; 
+        border-radius: 12px; 
+        width: fit-content;   /* 寬度隨內容縮放 */
+        min-width: 180px;     /* 保持份量感 */
+        margin: 10px auto 0;  /* 水平置中關鍵 */} 
 
-      #first-load-loading { text-align: center; padding: 50px; color: var(--text-light); }
+      #first-load-loading { text-align: center; padding: 60px; color: var(--text-light); }
 
-      footer { background-color: #263238; color: #b0bec5; padding: 40px 20px; margin-top: 50px; text-align: center; font-size: 0.9em; }
-      .disclaimer-box { max-width: 900px; margin: 0 auto 20px; border: 1px solid #37474f; padding: 20px; border-radius: 12px; background: rgba(255,255,255,0.05); line-height: 1.7; }
+      /* --- Footer: 深色玻璃 --- */
+      footer { 
+        background: var(--glass-bg-dark);
+        backdrop-filter: var(--backdrop-blur);
+        -webkit-backdrop-filter: var(--backdrop-blur);
+        border-top: var(--glass-border-dark);
+        color: #cfd8dc; 
+        padding: 50px 20px; margin-top: 60px; text-align: center; font-size: 0.95em; 
+      }
+      .disclaimer-box { 
+        max-width: 900px; margin: 0 auto 25px; 
+        border: 1px solid rgba(255,255,255,0.15); 
+        padding: 30px; border-radius: 16px; 
+        background: rgba(0,0,0,0.2); /* 比 footer 背景更深一點 */
+        line-height: 1.8; box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+      }
       
-      .license-explanation { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; text-align: left; }
-      .license-item { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px; border-left: 4px solid #80cbc4; }
-      .license-title { font-weight: bold; color: #80cbc4; margin-bottom: 5px; display: block; }
-      .license-desc { font-size: 0.85em; color: #b0bec5; line-height: 1.5; }
+      .license-explanation { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin: 25px 0; text-align: left; }
+      .license-item { background: rgba(255, 255, 255, 0.07); padding: 20px; border-radius: 12px; border-left: 5px solid var(--sky-blue); transition: transform 0.3s; }
+      .license-item:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.1); }
+      .license-title { font-weight: 700; color: var(--sky-blue); margin-bottom: 8px; display: block; font-size: 1.05em; }
+      .license-desc { font-size: 0.9em; color: #eceff1; line-height: 1.6; }
 
-      .copyright { color: #80cbc4; font-weight: bold; font-size: 1.1em; display: block; margin-top: 10px; }
+      .copyright { color: var(--sky-blue); font-weight: 700; font-size: 1.1em; display: block; margin-top: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
       
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
       @media (max-width: 600px) {
-        .control-panel { flex-direction: column; align-items: stretch; }
+        .control-panel { flex-direction: column; align-items: stretch; padding: 20px; }
         .filter-group, #searchInput, .btn-reset { width: 100%; }
-        header h1 { font-size: 1.5em; }
+        header { padding: 30px 15px; }
+        header h1 { font-size: 1.6em; }
+        .notice-box { padding: 15px; }
+        .card { padding: 20px; }
       }
     </style>
   </head>
   <body>
-
   <header>
       <h1>📝特教教材資源共享平台</h1>
-      <p style="font-size: 1.1em; font-weight: 500; margin-bottom: 15px;">匯集各路特教老師的智慧，讓備課更輕鬆</p>
+      <p>匯集各路特教老師的智慧，讓備課更輕鬆</p>
       
       <div class="notice-box">
         <span class="notice-title">⚠️ 尊重原創聲明</span>
@@ -202,8 +283,8 @@
       </div>
 
       <div id="first-load-loading" style="display:none;">
-          <div class="spinner-s" style="width:40px; height:40px; margin:0 auto 15px; border-width:4px;"></div>
-          <div>正在連線至雲端載入教材...</div>
+          <div class="spinner-s" style="width:50px; height:50px; margin:0 auto 20px; border-width:4px;"></div>
+          <div style="font-weight: 500; color: var(--primary-teal);">正在連線至雲端載入教材...</div>
       </div>
       
       <div id="content"></div>
@@ -211,13 +292,13 @@
 
     <footer>
       <div class="disclaimer-box">
-        <p><strong>📜 教材授權說明</strong></p>
+        <p style="font-size: 1.2em; color: white; margin-bottom: 20px;"><strong>📜 教材授權說明</strong></p>
         <div class="license-explanation">
-            <div class="license-item" style="border-color: #4DB6AC;">
+            <div class="license-item" style="border-color: #AEDEF4;">
                 <span class="license-title">🎨 CC BY-NC-SA 授權</span>
                 <span class="license-desc">允許非商業性使用、修改、再分享，但須註明作者，且須以同樣授權分享。</span>
             </div>
-            <div class="license-item" style="border-color: #FFB74D;">
+            <div class="license-item" style="border-color: #E67432;">
                 <span class="license-title">👁️ 僅供查看與參考</span>
                 <span class="license-desc">僅允許教學使用，不允許修改或二次創作，版權歸原作者所有。</span>
             </div>
@@ -226,16 +307,16 @@
                 <span class="license-desc">作者放棄所有版權，允許自由修改、使用，無需標註來源。</span>
             </div>
         </div>
-        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
+        <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:30px 0;">
 
-        <p><strong>⚠️ 免責聲明 (Disclaimer)</strong></p>
+        <p style="font-size: 1.1em; color: white;"><strong>⚠️ 免責聲明 (Disclaimer)</strong></p>
         <p>本平台之教材內容均由各特教老師分享，本人僅負責彙整與架設。教材版權歸原作者所有，連結有效性請自行斟酌。</p>
       </div>
       <span class="copyright">Designed by 米克師</span>
     </footer>
 
     <script>
-      // PWA Service Worker 註冊
+      // (JS 部分保持完全不變)
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./sw_share.js')
@@ -331,15 +412,15 @@
 
         let uniqueValues = Array.from(valuesSet);
         if (key === 'grade') {
-          uniqueValues.sort((a, b) => {
-             let idxA = GRADE_ORDER.indexOf(a);
-             let idxB = GRADE_ORDER.indexOf(b);
+          uniqueValues.sort((a, b) => { 
+             let idxA = GRADE_ORDER.indexOf(a); 
+             let idxB = GRADE_ORDER.indexOf(b); 
              return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
           });
         } else if (key === 'char') {
-          uniqueValues.sort((a, b) => {
-             let idxA = COGNITIVE_ORDER.indexOf(a);
-             let idxB = COGNITIVE_ORDER.indexOf(b);
+          uniqueValues.sort((a, b) => { 
+             let idxA = COGNITIVE_ORDER.indexOf(a); 
+             let idxB = COGNITIVE_ORDER.indexOf(b); 
              return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
           });
         } else { uniqueValues.sort(); }
@@ -382,20 +463,20 @@
         document.getElementById('typeSelect').value = "All";
         document.getElementById('charSelect').value = "All";
         filterData(); 
-      }
+       }
 
       function renderCards(data) {
         const container = document.getElementById('content');
         if(data.length === 0) { 
-            container.innerHTML = "<div style='grid-column:1/-1; text-align:center; color:#888; padding: 40px;'>🔍 找不到符合條件的教材。</div>"; 
-            return; 
-        }
+             container.innerHTML = "<div style='grid-column:1/-1; text-align:center; color: var(--primary-teal); padding: 40px; font-weight:500; background: var(--glass-bg-light); border-radius: 16px; backdrop-filter: var(--backdrop-blur);'>🔍 找不到符合條件的教材。</div>"; 
+             return; 
+         }
 
         container.innerHTML = data.map(item => {
           let link = String(item.link || "").trim();
           let btnHtml = (link.startsWith("http")) 
-            ? `<a href="${link}" target="_blank" class="btn">前往教材</a>` 
-            : `<div class="btn disabled">無連結</div>`;
+             ? `<a href="${link}" target="_blank" class="btn">前往教材</a>` 
+             : `<div class="btn disabled">無連結</div>`;
 
           let licRaw = String(item.license || "");
           let licShort = "未知授權";
